@@ -6,6 +6,7 @@ OncoConnect es una plataforma de apoyo y seguimiento para pacientes con cáncer 
 ```bash
 npm install
 npm run dev
+```
 
 ## React Compiler
 
