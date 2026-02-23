@@ -1,11 +1,11 @@
-# React + Vite
+# OncoConnect
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+OncoConnect es una plataforma de apoyo y seguimiento para pacientes con cáncer de mama, diseñada para mejorar el acompañamiento, la organización del proceso y la conexión entre quienes forman parte de este camino.
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Correr en local
+```bash
+npm install
+npm run dev
 
 ## React Compiler
 

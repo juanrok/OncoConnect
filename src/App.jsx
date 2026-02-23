@@ -6,14 +6,14 @@ export default function App() {
       display: "grid",
       placeItems: "center",
       fontFamily: "system-ui, Arial",
-      background: "#0b1220",
-      color: "white",
+      background: "#ffd9ef",
+      color: "#280b0b",
       padding: 24
     }}>
       <div style={{ textAlign: "center", maxWidth: 520 }}>
-        <h1 style={{ fontSize: 48, margin: 0 }}>Hola Buenas Admins :)</h1>
+        <h1 style={{ fontSize: 48, margin: 0 }}>¿Fuiste diagnosticada con cancer de mama?</h1>
         <p style={{ opacity: 0.85, fontSize: 18, marginTop: 12 }}>
-          Bases preliminares para el proyecto establecidas :)
+          ¡Aquí te contamos que hacer!
         </p>
       </div>
     </main>
