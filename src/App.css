@@ -1,42 +1,331 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+:root{
+  --bg: #fbe1eb;
+  --topbar: #f57fa0;
+  --hot: #e1006a;
+  --cardBorder: #ff4b93;
+  --text: #2b0f10;
+  --muted: rgba(43, 15, 16, 0.72);
+  --shadow: 0 14px 30px rgba(0,0,0,0.18);
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.appShell{
+  min-height: 100vh;
+  background: var(--bg);
+  padding: clamp(12px, 2vw, 28px);
+
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
+.appFrame{
+  width: min(1400px, 100%); 
+  display: flex;
+  justify-content: center;
+}
+
+.canvas{
+  width: min(420px, 100%);  
+}
+/*
+.appShell{
+  min-height: 100vh;
+  background: var(--bg);
+  padding: clamp(12px, 2vw, 28px);
+  display: flex;
+  justify-content: center;
+}
+/*
+.appFrame{
+  width: min(980px, 100%);
+  background: var(--bg);
+}
+*/
+/* Top bar */
+.topbar{
+  background: var(--topbar);
+  height: 56px;
+  border-radius: 0 0 26px 26px;
+  margin: 10px 12px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 14px;
+}
+
+.logoCircle{
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #ff9db8;
+  display: grid;
+  place-items: center;
+  border: 2px solid rgba(43, 15, 16, 0.18);
+}
+
+.hamburger{
+  width: 28px;
+  height: 20px;
+  display: grid;
+  gap: 4px;
+}
+.hamburger span{
+  height: 3px;
+  border-radius: 999px;
+  background: #2b0f10;
+  opacity: 0.9;
+}
+
+.content{
+  padding: 18px 18px 26px;
+  max-width: 620px;
+}
+
+@media (min-width: 900px){
+  .content{
+    padding: 24px 22px 34px;
+    max-width: 720px;
   }
-  to {
-    transform: rotate(360deg);
-  }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+h1{
+  font-size: 22px;
+  margin: 14px 0 8px;
+  font-weight: 800;
 }
 
-.card {
-  padding: 2em;
+p{
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
 }
 
-.read-the-docs {
-  color: #888;
+/* Botón */
+.primaryBtn{
+  margin-top: 14px;
+  background: var(--hot);
+  color: white;
+  border: none;
+  padding: 12px 18px;
+  border-radius: 999px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 10px 18px rgba(225, 0, 106, 0.25);
+}
+.primaryBtn:hover{ filter: brightness(1.03); }
+
+.sectionTitle{
+  margin-top: 18px;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.medCard{
+  margin-top: 12px;
+  border: 1.5px solid var(--cardBorder);
+  border-radius: 14px;
+  padding: 14px;
+  background: rgba(255,255,255,0.25);
+  width: 100%;
+}
+
+.medName{
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+
+.medLine{
+  font-size: 12px;
+  color: var(--text);
+  margin: 6px 0;
+}
+
+.smallLink{
+  margin-top: 10px;
+  font-size: 11px;
+  color: var(--hot);
+  text-decoration: none;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.symptomsWrap{
+  position: relative;
+  width: 100%;
+}
+
+.popover{
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: -128px;
+  width: min(320px, 92%);
+  background: #f57fa0;
+  color: #2b0f10;
+  border-radius: 16px;
+  padding: 12px 14px;
+  box-shadow: var(--shadow);
+}
+
+.popTitle{
+  font-weight: 900;
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+
+.popText{
+  font-size: 11px;
+  color: rgba(43,15,16,0.9);
+}
+
+.formTitle{
+  font-size: 20px;
+  font-weight: 900;
+  margin: 14px 0 14px;
+}
+
+.field{
+  margin-top: 14px;
+  width: 100%;
+}
+
+.label{
+  font-size: 12px;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+
+.selectBtn{
+  width: 100%;
+  border: none;
+  background: #f8a4bf;
+  padding: 10px 12px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  color: rgba(43,15,16,0.78);
+  font-size: 12px;
+}
+
+.chev{
+  width: 10px;
+  height: 10px;
+  border-right: 2px solid rgba(43,15,16,0.65);
+  border-bottom: 2px solid rgba(43,15,16,0.65);
+  transform: rotate(45deg);
+  margin-right: 4px;
+}
+
+.dropdown{
+  margin-top: 8px;
+  background: #f8a4bf;
+  border-radius: 16px;
+  padding: 10px;
+  width: min(280px, 100%);
+}
+
+.option{
+  padding: 6px 8px;
+  border-radius: 10px;
+  font-size: 12px;
+  cursor: pointer;
+}
+.option:hover{
+  background: rgba(255,255,255,0.35);
+}
+
+.rowBetween{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.linkBtn{
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-weight: 800;
+  color: rgba(43,15,16,0.8);
+}
+
+.input{
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(43,15,16,0.25);
+  background: rgba(255,255,255,0.55);
+  outline: none;
+}
+
+.lineInput{
+  width: 100%;
+  padding: 10px 2px;
+  border: none;
+  border-bottom: 1.5px solid rgba(43,15,16,0.55);
+  background: transparent;
+  outline: none;
+  font-size: 12px;
+  color: rgba(43,15,16,0.85);
+}
+
+.miniCenter{
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.tinyText{
+  font-size: 11px;
+  color: rgba(43,15,16,0.75);
+}
+
+.wide{ width: 100%; }
+
+.socialRow{
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+.socialBtn{
+  width: 58px;
+  height: 58px;
+  border-radius: 14px;
+  border: none;
+  cursor: pointer;
+  background: rgba(255,255,255,0.7);
+  box-shadow: 0 10px 18px rgba(0,0,0,0.06);
+  display: grid;
+  place-items: center;
+}
+
+.socialIcon{
+  font-weight: 900;
+  font-size: 22px;
+  color: rgba(43,15,16,0.75);
+}
+
+.welcomeArt{
+  margin-top: 14px;
+  width: 100%;
+  max-width: 320px;   
+  height: 160px;      
+  border-radius: 16px;
+  background: rgba(255,255,255,0.0); 
+  margin-left: auto;
+  margin-right: auto;
+  overflow: hidden;   
+  display: grid;
+  place-items: center;
+}
+
+.welcomeImg{
+  width: 100%;
+  height: 100%;
+  object-fit: contain; 
+  display: block;
 }
