@@ -1,152 +1,4 @@
-import { useEffect, useState } from "react";
-
-function bundleToResources(bundle) {
-  return (bundle?.entry || []).map((e) => e.resource).filter(Boolean);
-}
-
-function patientLabel(p) {
-  if (!p?.name?.[0]) return p.id;
-  const n = p.name[0];
-  return `${(n.given || []).join(" ")} ${n.family || ""}`.trim();
-}
-
-export default function App() {
-  const [health, setHealth] = useState(null);
-
-  const [patients, setPatients] = useState([]);
-  const [selectedPatientId, setSelectedPatientId] = useState("pt-001");
-  const [conditions, setConditions] = useState([]);
-
-  const [form, setForm] = useState({
-    givenName: "",
-    familyName: "",
-    gender: "unknown",
-    birthDate: "",
-    mrn: "",
-  });
-
-  const [creating, setCreating] = useState(false);
-  const [createMessage, setCreateMessage] = useState("");
-
-  async function loadHealth() {
-    const res = await fetch("/api/health");
-    const data = await res.json();
-    setHealth(data);
-  }
-
-  async function loadPatients() {
-    const res = await fetch("/fhir/Patient");
-    const bundle = await res.json();
-    const list = bundleToResources(bundle);
-    setPatients(list);
-
-    if (!selectedPatientId && list.length > 0) {
-      setSelectedPatientId(list[0].id);
-    }
-  }
-
-  async function loadConditions(patientId) {
-    if (!patientId) {
-      setConditions([]);
-      return;
-    }
-
-    const res = await fetch(`/fhir/Condition?patient=${encodeURIComponent(patientId)}`);
-    const bundle = await res.json();
-    setConditions(bundleToResources(bundle));
-  }
-
-  function updateForm(field, value) {
-    setForm((prev) => ({ ...prev, [field]: value }));
-  }
-
-  async function createPatient(e) {
-    e.preventDefault();
-    setCreateMessage("");
-
-    if (!form.givenName.trim() || !form.familyName.trim()) {
-      setCreateMessage("Debes llenar nombre y apellido.");
-      return;
-    }
-
-    setCreating(true);
-
-    const mrnValue =
-      form.mrn.trim() || `MRN-${Date.now().toString().slice(-6)}`;
-
-    const patientResource = {
-      resourceType: "Patient",
-      meta: {
-        profile: [
-          "http://hl7.org/fhir/us/mcode/StructureDefinition/mcode-cancer-patient",
-        ],
-      },
-      identifier: [
-        {
-          system: "http://example.org/mrn",
-          value: mrnValue,
-        },
-      ],
-      name: [
-        {
-          use: "official",
-          family: form.familyName.trim(),
-          given: [form.givenName.trim()],
-        },
-      ],
-      gender: form.gender,
-      birthDate: form.birthDate || undefined,
-    };
-
-    try {
-      const res = await fetch("/fhir/Patient", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/fhir+json",
-        },
-        body: JSON.stringify(patientResource),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        const msg =
-          data?.issue?.[0]?.diagnostics || "No se pudo crear el paciente.";
-        setCreateMessage(msg);
-        return;
-      }
-
-      setCreateMessage(`Paciente creado: ${patientLabel(data)} (${data.id})`);
-
-      setForm({
-        givenName: "",
-        familyName: "",
-        gender: "unknown",
-        birthDate: "",
-        mrn: "",
-      });
-
-      await loadPatients();
-      setSelectedPatientId(data.id);
-      await loadConditions(data.id);
-    } catch (error) {
-      setCreateMessage("Error conectando con el backend.");
-    } finally {
-      setCreating(false);
-    }
-  }
-
-  useEffect(() => {
-    loadHealth();
-    loadPatients();
-  }, []);
-
-  useEffect(() => {
-    if (selectedPatientId) {
-      loadConditions(selectedPatientId);
-    }
-  }, [selectedPatientId]);
-
+/*export default function App() {
   return (
     <main style={{
       minHeight: "100vh",
@@ -313,5 +165,136 @@ export default function App() {
         </ul>
       </section>
     </main>
+  );
+}
+  */
+
+/*
+import { useState } from "react";
+import "./App.css";
+
+import Home from "./pages/Home";
+import Medications from "./pages/Medications";
+import AddMedication from "./pages/AddMedication";
+
+export default function App() {
+  const [screen, setScreen] = useState("home"); // home | meds | add
+
+  if (screen === "home") {
+    return <Home onGoMeds={() => setScreen("meds")} />;
+  }
+
+  return (
+    <div className="appShell">
+      <div className="appFrame">
+        {screen === "meds" ? (
+          <Medications
+            onGoAdd={() => setScreen("add")}
+            onBackHome={() => setScreen("home")}
+          />
+        ) : (
+          <AddMedication
+            onBack={() => setScreen("meds")}
+          />
+        )}
+      </div>
+    </div>
+  );
+}
+
+*/
+import { useState } from "react";
+import "./App.css";
+
+import Home from "./pages/Home";
+import Medications from "./pages/Medications";
+import AddMedication from "./pages/AddMedication";
+
+import Login from "./pages/Login";
+import Name from "./pages/Name";
+import Welcome from "./pages/Welcome";
+
+export default function App() {
+  const [screen, setScreen] = useState("home"); // home | meds | add | login | name | welcome
+  const [userName, setUserName] = useState("Nombre");
+
+  if (screen === "home") {
+    return (
+      <Home
+        onGoMeds={() => setScreen("meds")}
+        onGoRoadmap={() => setScreen("login")}
+      />
+    );
+  }
+
+  // Medicamentos
+  if (screen === "meds") {
+    return (
+      <div className="appShell">
+        <div className="appFrame">
+          <div className="canvas">
+            <Medications
+            onGoAdd={() => setScreen("add")}
+            onBackHome={() => setScreen("home")}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (screen === "add") {
+    return (
+      <div className="appShell">
+        <div className="appFrame">
+          <div className="canvas">
+            <AddMedication onBack={() => setScreen("meds")} />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Hoja de ruta (flujo login → nombre → bienvenida)
+  if (screen === "login") {
+    return (
+      <div className="appShell">
+        <div className="appFrame">
+          <div className="canvas">
+            <Login onBack={() => setScreen("home")} onNext={() => setScreen("name")} />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (screen === "name") {
+    return (
+      <div className="appShell">
+        <div className="appFrame">
+          <div className="canvas">
+            <Name
+              onBack={() => setScreen("login")}
+              onNext={() => setScreen("welcome")}
+              onSetName={setUserName}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="appShell">
+      <div className="appFrame">
+        <div className="canvas">
+          <Welcome
+            userName={userName}
+            onBack={() => setScreen("name")}
+            onStart={() => setScreen("home")}
+          />
+        </div>
+      </div>
+    </div>
   );
 }
