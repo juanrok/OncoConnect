@@ -2,37 +2,45 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import TopBar from "../components/TopBar";
 
-export default function Login() {
+export default function Register() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [pass, setPass] = useState("");
+  const [form, setForm] = useState({
+    fullName: "",
+    email: "",
+    password: "",
+  });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  async function handleLogin() {
+  function updateField(field, value) {
+    setForm((prev) => ({ ...prev, [field]: value }));
+  }
+
+  async function handleRegister() {
     setError("");
 
-    if (!email.trim() || !pass.trim()) {
-      setError("Completa correo y contraseña.");
+    if (!form.fullName.trim() || !form.email.trim() || !form.password.trim()) {
+      setError("Completa todos los campos.");
       return;
     }
 
     try {
       setLoading(true);
 
-      const res = await fetch("/api/auth/login", {
+      const res = await fetch("/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          email: email.trim(),
-          password: pass,
+          fullName: form.fullName.trim(),
+          email: form.email.trim(),
+          password: form.password,
         }),
       });
 
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data?.message || "No se pudo iniciar sesión.");
+        setError(data?.message || "No se pudo crear la cuenta.");
         return;
       }
 
@@ -53,18 +61,28 @@ export default function Login() {
 
       <div className="content">
         <div className="rowBetween" style={{ marginTop: 8 }}>
-          <h1 style={{ margin: 0, fontSize: 24 }}>Inicia sesión</h1>
+          <h1 style={{ margin: 0, fontSize: 24 }}>Crear cuenta</h1>
           <button className="linkBtn" onClick={() => navigate("/")}>
             Volver
           </button>
         </div>
 
         <div className="field">
+          <div className="label">Nombre completo</div>
+          <input
+            className="input"
+            value={form.fullName}
+            onChange={(e) => updateField("fullName", e.target.value)}
+            placeholder="Ej. Alejandra Salas"
+          />
+        </div>
+
+        <div className="field">
           <div className="label">Correo</div>
           <input
             className="input"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={form.email}
+            onChange={(e) => updateField("email", e.target.value)}
             placeholder="correo@ejemplo.com"
           />
         </div>
@@ -74,8 +92,8 @@ export default function Login() {
           <input
             className="input"
             type="password"
-            value={pass}
-            onChange={(e) => setPass(e.target.value)}
+            value={form.password}
+            onChange={(e) => updateField("password", e.target.value)}
             placeholder="********"
           />
         </div>
@@ -88,21 +106,17 @@ export default function Login() {
 
         <div className="miniCenter">
           <span className="tinyText">
-            ¿No tienes una cuenta? <Link to="/register">Regístrate</Link>
+            ¿Ya tienes cuenta? <Link to="/login">Inicia sesión</Link>
           </span>
         </div>
 
         <button
           className="primaryBtn wide"
-          onClick={handleLogin}
+          onClick={handleRegister}
           disabled={loading}
         >
-          {loading ? "Ingresando..." : "Iniciar sesión"}
+          {loading ? "Creando..." : "Crear cuenta"}
         </button>
-
-        <div className="miniCenter" style={{ marginTop: 14 }}>
-          <span className="tinyText">Luego aquí conectamos Google</span>
-        </div>
       </div>
     </>
   );

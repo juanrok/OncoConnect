@@ -1,8 +1,10 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import TopBar from "../components/TopBar";
 import Select from "../components/Select";
 
-export default function AddMedication({ onBack }) {
+export default function AddMedication() {
+  const navigate = useNavigate();
   const [name, setName] = useState("");
   const [dose, setDose] = useState("");
 
@@ -25,55 +27,44 @@ export default function AddMedication({ onBack }) {
   return (
     <>
       <TopBar />
+
       <div className="content">
         <div className="rowBetween" style={{ marginTop: 10 }}>
           <div className="formTitle">Añadir un medicamento</div>
+
           <button
             type="button"
-            onClick={onBack}
+            onClick={() => navigate("/medications")}
             style={{
               border: "none",
               background: "transparent",
               cursor: "pointer",
               fontWeight: 800,
-              color: "rgba(43,15,16,0.8)"
             }}
           >
             Volver
           </button>
         </div>
 
-        <div className="field">
-          <div className="label">Nombre</div>
-          <Select
-            placeholder="Selecciona una opción..."
-            options={meds}
-            value={name}
-            onChange={setName}
-          />
-        </div>
+        <Select
+          label="Medicamento"
+          value={name}
+          onChange={setName}
+          options={meds}
+        />
 
-        <div className="field">
-          <div className="label">Dosis</div>
-          <Select
-            placeholder="Selecciona una opción..."
-            options={doses}
-            value={dose}
-            onChange={setDose}
-          />
-        </div>
+        <h1></h1>
+        
+        <Select
+          label="Dosis"
+          value={dose}
+          onChange={setDose}
+          options={doses}
+        />
 
         <button
-          style={{
-            marginTop: 18,
-            background: "#e1006a",
-            color: "white",
-            border: "none",
-            padding: "12px 18px",
-            borderRadius: 999,
-            fontWeight: 800,
-            cursor: "pointer"
-          }}
+          className="primaryBtn wide"
+          onClick={() => navigate("/medications")}
         >
           Guardar
         </button>
