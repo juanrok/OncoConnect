@@ -10,7 +10,7 @@ function patientLabel(p) {
   return `${(n.given || []).join(" ")} ${n.family || ""}`.trim();
 }
 
-export default function App() {
+export default function Test() {
   const [health, setHealth] = useState(null);
 
   const [patients, setPatients] = useState([]);
