@@ -5,6 +5,7 @@ require("dotenv").config();
 
 const { connectDB } = require("./db");
 const FhirResource = require("./models/FhirResource");
+const authRoutes = require("./routes/auth");
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -16,6 +17,8 @@ app.use(
     type: ["application/json", "application/fhir+json"]
   })
 );
+
+app.use("/api/auth", authRoutes);
 
 // para front: fetch("/fhir/...")
 app.use("/fhir", (req, res, next) => {

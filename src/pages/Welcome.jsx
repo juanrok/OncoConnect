@@ -25,7 +25,6 @@ export default function Welcome() {
   return (
     <>
       <TopBar />
-
       <div className="content">
         <div className="rowBetween" style={{ marginTop: 8 }}>
           <div />
@@ -35,29 +34,20 @@ export default function Welcome() {
         </div>
 
         <h1 style={{ marginTop: 10, fontSize: 16, fontWeight: 900 }}>
-          ¡Bienvenida, {userName}! Nos alegra que formes parte de nuestra
-          comunidad.
+          ¡Bienvenida, {userName}! Nos alegra que formes parte de nuestra comunidad.
         </h1>
 
         <div className="welcomeArt" aria-label="Ilustración comunidad">
-          <img
-            src={welcomePeople}
-            alt="Comunidad diversa"
-            className="welcomeImg"
-          />
+          <img src={welcomePeople} alt="Comunidad diversa" className="welcomeImg" />
         </div>
 
         <p style={{ marginTop: 10, textAlign: "center" }}>
-          En OncoConnect, estamos aquí para brindarte todo el apoyo necesario
-          durante tu proceso.
+          En OncoConnect, estamos aquí para brindarte todo el apoyo necesario durante tu proceso.
+          Desde orientación y autocuidado hasta acceso a la salud, estamos contigo en cada paso.
         </p>
 
-        <button
-          className="primaryBtn"
-          style={{ marginTop: 18 }}
-          onClick={() => navigate("/medications")}
-        >
-          Ir a medicamentos
+        <button className="primaryBtn" style={{ marginTop: 18 }} onClick={() => navigate("/medications")}>
+          Iniciar
         </button>
       </div>
     </>

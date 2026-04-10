@@ -16,7 +16,13 @@ export const router = createBrowserRouter([
       { index: true, element: <Home /> },
       { path: "login", element: <Login /> },
       { path: "register", element: <Register /> },
-      { path: "welcome", element: <Welcome /> },
+      { path: "welcome",
+        element: (
+          <ProtectedRoute>
+            <Welcome />
+          </ProtectedRoute>
+        ),
+      },
       {
         path: "medications",
         element: (

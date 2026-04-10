@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import TopBar from "../components/TopBar";
 
 export default function Register() {
@@ -11,6 +11,11 @@ export default function Register() {
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  function saveSession(data) {
+    localStorage.setItem("token", data.token);
+    localStorage.setItem("user", JSON.stringify(data.user));
+  }
 
   function updateField(field, value) {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -30,11 +35,7 @@ export default function Register() {
       const res = await fetch("/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          fullName: form.fullName.trim(),
-          email: form.email.trim(),
-          password: form.password,
-        }),
+        body: JSON.stringify(form),
       });
 
       const data = await res.json();
@@ -44,9 +45,7 @@ export default function Register() {
         return;
       }
 
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
-
+      saveSession(data);
       navigate("/welcome");
     } catch {
       setError("Error conectando con el servidor.");
@@ -58,7 +57,6 @@ export default function Register() {
   return (
     <>
       <TopBar />
-
       <div className="content">
         <div className="rowBetween" style={{ marginTop: 8 }}>
           <h1 style={{ margin: 0, fontSize: 24 }}>Crear cuenta</h1>
@@ -99,9 +97,7 @@ export default function Register() {
         </div>
 
         {error ? (
-          <div style={{ marginTop: 10, color: "#b00020", fontSize: 12 }}>
-            {error}
-          </div>
+          <div style={{ marginTop: 10, color: "#b00020", fontSize: 12 }}>{error}</div>
         ) : null}
 
         <div className="miniCenter">
@@ -110,11 +106,7 @@ export default function Register() {
           </span>
         </div>
 
-        <button
-          className="primaryBtn wide"
-          onClick={handleRegister}
-          disabled={loading}
-        >
+        <button className="primaryBtn wide" onClick={handleRegister} disabled={loading}>
           {loading ? "Creando..." : "Crear cuenta"}
         </button>
       </div>

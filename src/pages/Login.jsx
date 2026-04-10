@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { GoogleLogin } from "@react-oauth/google";
 import TopBar from "../components/TopBar";
 
 export default function Login() {
@@ -8,6 +9,11 @@ export default function Login() {
   const [pass, setPass] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  function saveSession(data) {
+    localStorage.setItem("token", data.token);
+    localStorage.setItem("user", JSON.stringify(data.user));
+  }
 
   async function handleLogin() {
     setError("");
@@ -23,10 +29,7 @@ export default function Login() {
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: email.trim(),
-          password: pass,
-        }),
+        body: JSON.stringify({ email, password: pass }),
       });
 
       const data = await res.json();
@@ -36,9 +39,7 @@ export default function Login() {
         return;
       }
 
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
-
+      saveSession(data);
       navigate("/welcome");
     } catch {
       setError("Error conectando con el servidor.");
@@ -47,10 +48,33 @@ export default function Login() {
     }
   }
 
+  async function handleGoogleSuccess(credentialResponse) {
+    setError("");
+
+    try {
+      const res = await fetch("/api/auth/google", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ credential: credentialResponse.credential }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data?.message || "No se pudo iniciar con Google.");
+        return;
+      }
+
+      saveSession(data);
+      navigate("/welcome");
+    } catch {
+      setError("Error conectando con el servidor.");
+    }
+  }
+
   return (
     <>
       <TopBar />
-
       <div className="content">
         <div className="rowBetween" style={{ marginTop: 8 }}>
           <h1 style={{ margin: 0, fontSize: 24 }}>Inicia sesión</h1>
@@ -81,9 +105,7 @@ export default function Login() {
         </div>
 
         {error ? (
-          <div style={{ marginTop: 10, color: "#b00020", fontSize: 12 }}>
-            {error}
-          </div>
+          <div style={{ marginTop: 10, color: "#b00020", fontSize: 12 }}>{error}</div>
         ) : null}
 
         <div className="miniCenter">
@@ -92,16 +114,20 @@ export default function Login() {
           </span>
         </div>
 
-        <button
-          className="primaryBtn wide"
-          onClick={handleLogin}
-          disabled={loading}
-        >
+        <button className="primaryBtn wide" onClick={handleLogin} disabled={loading}>
           {loading ? "Ingresando..." : "Iniciar sesión"}
         </button>
 
         <div className="miniCenter" style={{ marginTop: 14 }}>
-          <span className="tinyText">Luego aquí conectamos Google</span>
+          <span className="tinyText">O inicia sesión con:</span>
+        </div>
+
+        <div style={{ marginTop: 12, display: "flex", justifyContent: "center" }}>
+          <GoogleLogin
+            onSuccess={handleGoogleSuccess}
+            onError={() => setError("Falló el inicio con Google.")}
+            useOneTap={false}
+          />
         </div>
       </div>
     </>
