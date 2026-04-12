@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import logo from "../assets/logo_onco.png";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -15,19 +16,28 @@ export default function Home() {
         padding: 24,
       }}
     >
+      
       <div style={{ textAlign: "center", maxWidth: 520 }}>
-        <h1 style={{ fontSize: 48, margin: 0 }}>
-          ¿Fuiste diagnosticada con cancer de mama?
+        <img 
+          src={logo} 
+          alt="Lazo cáncer de mama" 
+          style={{ width: 150, marginBottom: 10 }} 
+        />
+        <h1 style={{ fontSize: 28, margin: 10, fontWeight: "bold", lineHeight: 1 }}>
+          <span style={{ color: "#e1006a", fontWeight: "bold" }}>
+            OncoConnect
+          </span>{" "}
+          es tu espacio de apoyo durante el tratamiento de cancer de mama
         </h1>
 
-        <p style={{ opacity: 0.85, fontSize: 18, marginTop: 12 }}>
-          ¡Aquí te contamos que hacer!
+        <p style={{ opacity: 1, fontSize: 18, marginTop: 16 }}>
+          Haz seguimiento a tu proceso y accede a herramientas diseñadas para acompañarte
         </p>
 
         <button
           onClick={() => navigate("/login")}
           style={{
-            marginTop: 12,
+            marginTop: 30,
             background: "#e1006a",
             color: "white",
             border: "none",
