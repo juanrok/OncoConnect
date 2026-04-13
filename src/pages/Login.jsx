@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useOutletContext } from "react-router-dom";
 import { GoogleLogin } from "@react-oauth/google";
 import TopBar from "../components/TopBar";
+
 
 export default function Login() {
   const navigate = useNavigate();
@@ -9,6 +10,7 @@ export default function Login() {
   const [pass, setPass] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const { openMenu } = useOutletContext();
 
   function saveSession(data) {
     localStorage.setItem("token", data.token);
@@ -74,7 +76,7 @@ export default function Login() {
 
   return (
     <>
-      <TopBar />
+      <TopBar onMenuClick={openMenu}/>
       <div className="content">
         <div className="rowBetween" style={{ marginTop: 8 }}>
           <h1 style={{ margin: 0, fontSize: 24 }}>Inicia sesión</h1>

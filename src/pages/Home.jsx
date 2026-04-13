@@ -1,8 +1,9 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import logo from "../assets/logo_onco.png";
 
 export default function Home() {
   const navigate = useNavigate();
+  const { openMenu } = useOutletContext();
 
   return (
     <main
@@ -11,7 +12,7 @@ export default function Home() {
         display: "grid",
         placeItems: "center",
         fontFamily: "system-ui, Arial",
-        background: "#ffd9ef",
+        //background: "#ffd9ef",
         color: "#280b0b",
         padding: 24,
       }}
@@ -50,22 +51,7 @@ export default function Home() {
           Iniciar
         </button>
 
-        <button
-          onClick={() => navigate("/medications")}
-          style={{
-            marginTop: 12,
-            marginLeft: 10,
-            background: "white",
-            color: "#e1006a",
-            border: "1px solid #e1006a",
-            padding: "12px 18px",
-            borderRadius: 999,
-            fontWeight: 800,
-            cursor: "pointer",
-          }}
-        >
-          Medicamentos
-        </button>
+        
       </div>
     </main>
   );

@@ -1,19 +1,15 @@
 import { useMemo } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import TopBar from "../components/TopBar";
 import welcomePeople from "../assets/bienvenida.jpg";
 
 export default function Welcome() {
   const navigate = useNavigate();
+  const { openMenu } = useOutletContext();
 
   const userName = useMemo(() => {
-    try {
-      const raw = localStorage.getItem("user");
-      const user = raw ? JSON.parse(raw) : null;
-      return user?.fullName || "Usuario";
-    } catch {
-      return "Usuario";
-    }
+    const raw = localStorage.getItem("userName");
+    return (raw && raw.trim()) ? raw : "Usuario";
   }, []);
 
   function handleLogout() {
@@ -24,7 +20,7 @@ export default function Welcome() {
 
   return (
     <>
-      <TopBar />
+      <TopBar onMenuClick={openMenu} />
       <div className="content">
         <div className="rowBetween" style={{ marginTop: 8 }}>
           <div />
@@ -46,7 +42,7 @@ export default function Welcome() {
           Desde orientación y autocuidado hasta acceso a la salud, estamos contigo en cada paso.
         </p>
 
-        <button className="primaryBtn" style={{ marginTop: 18 }} onClick={() => navigate("/medications")}>
+        <button className="primaryBtn" style={{ marginTop: 18}} onClick={() => navigate("/Medications")}>
           Iniciar
         </button>
       </div>

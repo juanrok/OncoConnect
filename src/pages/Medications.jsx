@@ -1,15 +1,16 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import TopBar from "../components/TopBar";
 import MedicationCard from "../components/MedicationCard";
 
 export default function Medications() {
   const navigate = useNavigate();
+  const { openMenu } = useOutletContext();
   const [showSymptoms, setShowSymptoms] = useState(false);
 
   return (
     <>
-      <TopBar />
+      <TopBar onMenuClick={openMenu} />
 
       <div className="content">
         <div className="rowBetween">

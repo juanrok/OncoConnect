@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import TopBar from "../components/TopBar";
 import Select from "../components/Select";
 
@@ -7,6 +7,7 @@ export default function AddMedication() {
   const navigate = useNavigate();
   const [name, setName] = useState("");
   const [dose, setDose] = useState("");
+  const { openMenu } = useOutletContext();
 
   const meds = [
     "Lapatinib",
@@ -26,7 +27,7 @@ export default function AddMedication() {
 
   return (
     <>
-      <TopBar />
+      <TopBar onMenuClick={openMenu}/>
 
       <div className="content">
         <div className="rowBetween" style={{ marginTop: 10 }}>

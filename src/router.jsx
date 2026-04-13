@@ -7,6 +7,9 @@ import Welcome from "./pages/Welcome";
 import Medications from "./pages/Medications";
 import AddMedication from "./pages/AddMedication";
 import ProtectedRoute from "./components/ProtectedRoute";
+import Name from "./pages/Name";
+import School from "./pages/School";
+import SchoolCategories from "./pages/SchoolCategories";
 
 export const router = createBrowserRouter([
   {
@@ -16,6 +19,7 @@ export const router = createBrowserRouter([
       { index: true, element: <Home /> },
       { path: "login", element: <Login /> },
       { path: "register", element: <Register /> },
+      { path: "name", element: <Name /> },
       { path: "welcome",
         element: (
           <ProtectedRoute>
@@ -38,6 +42,14 @@ export const router = createBrowserRouter([
             <AddMedication />
           </ProtectedRoute>
         ),
+      },
+      { 
+        path: "school", 
+        element: <School /> 
+      },
+      { 
+        path: "school/categories", 
+        element: <SchoolCategories /> 
       },
     ],
   },

@@ -1,18 +1,26 @@
 import { useState } from "react";
 import TopBar from "../components/TopBar";
+import { useNavigate, useOutletContext } from "react-router-dom";
 
-export default function Name({ onBack, onNext, onSetName }) {
+export default function Name() {
   const [name, setName] = useState("");
+  const navigate = useNavigate();
+  const { openMenu } = useOutletContext();
+
+  const handleNext = () => {
+    localStorage.setItem("userName", name.trim() || "Nombre");
+    navigate("/welcome");
+  };
 
   return (
     <>
-      <TopBar />
+      <TopBar onMenuClick={openMenu} />
       <div className="content">
         <div className="rowBetween" style={{ marginTop: 8 }}>
           <h1 style={{ margin: 0, fontSize: 18, fontWeight: 800 }}>
             ¡Hola! Por favor, cuéntanos tu nombre:
           </h1>
-          <button className="linkBtn" onClick={onBack}>Volver</button>
+          <button className="linkBtn" onClick={() => navigate("/login")}>Volver</button>
         </div>
 
         <div className="field" style={{ marginTop: 18 }}>
@@ -27,10 +35,7 @@ export default function Name({ onBack, onNext, onSetName }) {
         <button
           className="primaryBtn"
           style={{ marginTop: 22 }}
-          onClick={() => {
-            onSetName(name || "Nombre");
-            onNext();
-          }}
+          onClick={handleNext}
         >
           Siguiente
         </button>

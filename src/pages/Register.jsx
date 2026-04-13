@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useOutletContext } from "react-router-dom";
 import TopBar from "../components/TopBar";
 
 export default function Register() {
   const navigate = useNavigate();
+  const {openMenu} =useOutletContext();
   const [form, setForm] = useState({
     fullName: "",
     email: "",
@@ -56,7 +57,7 @@ export default function Register() {
 
   return (
     <>
-      <TopBar />
+      <TopBar onMenuClick={openMenu}/>
       <div className="content">
         <div className="rowBetween" style={{ marginTop: 8 }}>
           <h1 style={{ margin: 0, fontSize: 24 }}>Crear cuenta</h1>
