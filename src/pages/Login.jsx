@@ -1,16 +1,27 @@
-import { useState } from "react";
-import { Link, useNavigate, useOutletContext } from "react-router-dom";
+import { useMemo, useState } from "react";
+import { Link, useNavigate, useOutletContext, useSearchParams } from "react-router-dom";
 import { GoogleLogin } from "@react-oauth/google";
 import TopBar from "../components/TopBar";
 
-
 export default function Login() {
   const navigate = useNavigate();
+  const { openMenu } = useOutletContext();
+  const [searchParams] = useSearchParams();
+
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
   const [error, setError] = useState("");
+  const [info, setInfo] = useState("");
   const [loading, setLoading] = useState(false);
-  const { openMenu } = useOutletContext();
+  const [resendLoading, setResendLoading] = useState(false);
+  const [unverifiedEmail, setUnverifiedEmail] = useState("");
+
+  const topMessage = useMemo(() => {
+    if (searchParams.get("registered") === "1") {
+      return "Cuenta creada. Ya puedes iniciar sesión.";
+    }
+    return "";
+  }, [searchParams]);
 
   function saveSession(data) {
     localStorage.setItem("token", data.token);
@@ -19,6 +30,8 @@ export default function Login() {
 
   async function handleLogin() {
     setError("");
+    setInfo("");
+    setUnverifiedEmail("");
 
     if (!email.trim() || !pass.trim()) {
       setError("Completa correo y contraseña.");
@@ -37,6 +50,9 @@ export default function Login() {
       const data = await res.json();
 
       if (!res.ok) {
+        if (data?.code === "EMAIL_NOT_VERIFIED") {
+          setUnverifiedEmail(data.email || email.trim());
+        }
         setError(data?.message || "No se pudo iniciar sesión.");
         return;
       }
@@ -50,8 +66,33 @@ export default function Login() {
     }
   }
 
+  async function handleResend() {
+    const targetEmail = unverifiedEmail || email.trim();
+    if (!targetEmail) return;
+
+    setResendLoading(true);
+    setInfo("");
+    setError("");
+
+    try {
+      const res = await fetch("/api/auth/resend-verification", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: targetEmail }),
+      });
+
+      const data = await res.json();
+      setInfo(data?.message || "Solicitud procesada.");
+    } catch {
+      setError("No se pudo reenviar el correo.");
+    } finally {
+      setResendLoading(false);
+    }
+  }
+
   async function handleGoogleSuccess(credentialResponse) {
     setError("");
+    setInfo("");
 
     try {
       const res = await fetch("/api/auth/google", {
@@ -76,7 +117,7 @@ export default function Login() {
 
   return (
     <>
-      <TopBar onMenuClick={openMenu}/>
+      <TopBar onMenuClick={openMenu} />
       <div className="content">
         <div className="rowBetween" style={{ marginTop: 8 }}>
           <h1 style={{ margin: 0, fontSize: 24 }}>Inicia sesión</h1>
@@ -84,6 +125,10 @@ export default function Login() {
             Volver
           </button>
         </div>
+
+        {topMessage ? (
+          <div style={{ marginTop: 10, color: "#0a7a2f", fontSize: 12 }}>{topMessage}</div>
+        ) : null}
 
         <div className="field">
           <div className="label">Correo</div>
@@ -108,6 +153,21 @@ export default function Login() {
 
         {error ? (
           <div style={{ marginTop: 10, color: "#b00020", fontSize: 12 }}>{error}</div>
+        ) : null}
+
+        {info ? (
+          <div style={{ marginTop: 10, color: "#0a7a2f", fontSize: 12 }}>{info}</div>
+        ) : null}
+
+        {unverifiedEmail ? (
+          <button
+            className="primaryBtn wide"
+            style={{ marginTop: 12 }}
+            onClick={handleResend}
+            disabled={resendLoading}
+          >
+            {resendLoading ? "Reenviando..." : "Reenviar correo de verificación"}
+          </button>
         ) : null}
 
         <div className="miniCenter">

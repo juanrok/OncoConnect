@@ -4,7 +4,7 @@ import TopBar from "../components/TopBar";
 
 export default function Register() {
   const navigate = useNavigate();
-  const {openMenu} =useOutletContext();
+  const { openMenu } = useOutletContext();
   const [form, setForm] = useState({
     fullName: "",
     email: "",
@@ -12,11 +12,6 @@ export default function Register() {
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-
-  function saveSession(data) {
-    localStorage.setItem("token", data.token);
-    localStorage.setItem("user", JSON.stringify(data.user));
-  }
 
   function updateField(field, value) {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -46,18 +41,23 @@ export default function Register() {
         return;
       }
 
-      saveSession(data);
-      navigate("/welcome");
-    } catch {
-      setError("Error conectando con el servidor.");
-    } finally {
+      if (data.requiresEmailVerification) {
+        navigate(`/check-email?email=${encodeURIComponent(data.email)}`);
+        return;
+      }
+
+      navigate("/login?registered=1");
+    } catch (error) {
+      console.error("REGISTER.JSX ERROR:", error);
+      res.status(500).json({ message: "Error creando la cuenta." });
+  } finally {
       setLoading(false);
     }
   }
 
   return (
     <>
-      <TopBar onMenuClick={openMenu}/>
+      <TopBar onMenuClick={openMenu} />
       <div className="content">
         <div className="rowBetween" style={{ marginTop: 8 }}>
           <h1 style={{ margin: 0, fontSize: 24 }}>Crear cuenta</h1>

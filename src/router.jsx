@@ -10,6 +10,8 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Name from "./pages/Name";
 import School from "./pages/School";
 import SchoolCategories from "./pages/SchoolCategories";
+import CheckEmail from "./pages/CheckEmail";
+import VerifyEmail from "./pages/VerifyEmail";
 
 export const router = createBrowserRouter([
   {
@@ -19,8 +21,11 @@ export const router = createBrowserRouter([
       { index: true, element: <Home /> },
       { path: "login", element: <Login /> },
       { path: "register", element: <Register /> },
+      { path: "check-email", element: <CheckEmail /> },
+      { path: "verify-email", element: <VerifyEmail /> },
       { path: "name", element: <Name /> },
-      { path: "welcome",
+      {
+        path: "welcome",
         element: (
           <ProtectedRoute>
             <Welcome />
@@ -43,14 +48,8 @@ export const router = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
-      { 
-        path: "school", 
-        element: <School /> 
-      },
-      { 
-        path: "school/categories", 
-        element: <SchoolCategories /> 
-      },
+      { path: "school", element: <School /> },
+      { path: "school/categories", element: <SchoolCategories /> },
     ],
   },
 ]);

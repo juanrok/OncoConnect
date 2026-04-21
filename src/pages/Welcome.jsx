@@ -8,8 +8,13 @@ export default function Welcome() {
   const { openMenu } = useOutletContext();
 
   const userName = useMemo(() => {
-    const raw = localStorage.getItem("userName");
-    return (raw && raw.trim()) ? raw : "Usuario";
+    try {
+      const raw = localStorage.getItem("user");
+      const user = raw ? JSON.parse(raw) : null;
+      return user?.fullName || "Usuario";
+    } catch {
+      return "Usuario";
+    }
   }, []);
 
   function handleLogout() {
@@ -42,7 +47,11 @@ export default function Welcome() {
           Desde orientación y autocuidado hasta acceso a la salud, estamos contigo en cada paso.
         </p>
 
-        <button className="primaryBtn" style={{ marginTop: 18}} onClick={() => navigate("/Medications")}>
+        <button
+          className="primaryBtn"
+          style={{ marginTop: 18 }}
+          onClick={() => navigate("/medications")}
+        >
           Iniciar
         </button>
       </div>
