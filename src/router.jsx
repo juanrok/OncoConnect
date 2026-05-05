@@ -23,7 +23,14 @@ export const router = createBrowserRouter([
       { path: "register", element: <Register /> },
       { path: "check-email", element: <CheckEmail /> },
       { path: "verify-email", element: <VerifyEmail /> },
-      { path: "name", element: <Name /> },
+      {
+        path: "name",
+        element: (
+          <ProtectedRoute>
+            <Name />
+          </ProtectedRoute>
+        ),
+      },
       {
         path: "welcome",
         element: (
@@ -48,8 +55,22 @@ export const router = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
-      { path: "school", element: <School /> },
-      { path: "school/categories", element: <SchoolCategories /> },
+      {
+        path: "school",
+        element: (
+          <ProtectedRoute>
+            <School />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "school/categories",
+        element: (
+          <ProtectedRoute>
+            <SchoolCategories />
+          </ProtectedRoute>
+        ),
+      },
     ],
   },
 ]);

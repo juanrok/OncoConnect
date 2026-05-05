@@ -1,4 +1,18 @@
+import { useNavigate } from "react-router-dom";
+
 export default function MenuDrawer({ open, onClose, onNavigate }) {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    // Clear authentication data
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    
+    // Close menu and navigate to home
+    onClose();
+    navigate("/");
+  };
+
   if (!open) return null;
 
   return (
@@ -12,7 +26,7 @@ export default function MenuDrawer({ open, onClose, onNavigate }) {
         </div>
 
         <nav className="drawerNav">
-          <button className="drawerItem" onClick={() => onNavigate("/Name")}>
+          <button className="drawerItem" onClick={() => onNavigate("/name")}>
             Bienvenida
           </button>
           <button className="drawerItem" onClick={() => onNavigate("/login")}>
@@ -23,7 +37,14 @@ export default function MenuDrawer({ open, onClose, onNavigate }) {
           </button>
           <button className="drawerItem" onClick={() => onNavigate("/school")}>
             Escuela del Cuidado
-          </button> 
+          </button>
+          <button 
+            className="drawerItem" 
+            onClick={handleLogout}
+            style={{ color: "#e1006a", fontWeight: 600 }}
+          >
+            Cerrar sesión
+          </button>
         </nav>
       </aside>
     </div>

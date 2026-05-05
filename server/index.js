@@ -6,6 +6,7 @@ require("dotenv").config();
 const { connectDB } = require("./db");
 const FhirResource = require("./models/FhirResource");
 const authRoutes = require("./routes/auth");
+const medicationRoutes = require("./routes/medications");
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -19,6 +20,7 @@ app.use(
 );
 
 app.use("/api/auth", authRoutes);
+app.use("/api/medications", medicationRoutes);
 
 // para front: fetch("/fhir/...")
 app.use("/fhir", (req, res, next) => {

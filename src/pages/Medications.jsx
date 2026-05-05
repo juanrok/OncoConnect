@@ -1,12 +1,46 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import TopBar from "../components/TopBar";
 import MedicationCard from "../components/MedicationCard";
+import { medicationsService } from "../services/medications";
 
 export default function Medications() {
   const navigate = useNavigate();
   const { openMenu } = useOutletContext();
-  const [showSymptoms, setShowSymptoms] = useState(false);
+  const [medications, setMedications] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [showSymptoms, setShowSymptoms] = useState({});
+
+  useEffect(() => {
+    loadMedications();
+  }, []);
+
+  async function loadMedications() {
+    try {
+      setLoading(true);
+      setError("");
+      const data = await medicationsService.getAll();
+      setMedications(data);
+    } catch (err) {
+      console.error("Error loading medications:", err);
+      setError(err.message || "No se pudieron cargar los medicamentos.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleDelete(id) {
+    if (!confirm("¿Estás segura de que quieres eliminar este medicamento?")) return;
+
+    try {
+      await medicationsService.delete(id);
+      setMedications((prev) => prev.filter((m) => m._id !== id));
+    } catch (err) {
+      console.error("Error deleting medication:", err);
+      setError(err.message || "No se pudo eliminar el medicamento.");
+    }
+  }
 
   return (
     <>
@@ -44,28 +78,63 @@ export default function Medications() {
           Añadir medicamento
         </button>
 
+        {error && (
+          <div
+            style={{
+              backgroundColor: "#ffe0e0",
+              color: "#c00",
+              padding: "10px",
+              borderRadius: "4px",
+              marginTop: "10px",
+            }}
+          >
+            {error}
+          </div>
+        )}
+
         <div className="sectionTitle">Tus medicamentos</div>
 
-        <div className="symptomsWrap" style={{ marginTop: 10 }}>
-          {showSymptoms && (
-            <div className="popover">
-              <div className="popTitle">
-                Posibles síntomas al consumir Neratinib
-              </div>
-              <div className="popText">
-                infecciones, náuseas, fatiga, diarrea, vómitos, dolor de cabeza,
-                estreñimiento, alopecia, tos, erupción, dolor de espalda
-              </div>
-            </div>
-          )}
+        {loading ? (
+          <div style={{ textAlign: "center", padding: "20px" }}>Cargando...</div>
+        ) : medications.length === 0 ? (
+          <div style={{ textAlign: "center", padding: "20px", opacity: 0.7 }}>
+            No tienes medicamentos registrados aún.
+          </div>
+        ) : (
+          <div className="symptomsWrap" style={{ marginTop: 10 }}>
+            {medications.map((med) => (
+              <div key={med._id}>
+                {showSymptoms[med._id] && (
+                  <div className="popover">
+                    <div className="popTitle">
+                      Información de {med.name}
+                    </div>
+                    <div className="popText">
+                      <strong>Dosis:</strong> {med.dose || "No especificada"}
+                      <br />
+                      <strong>Frecuencia:</strong> {med.frequency || "No especificada"}
+                      <br />
+                      <strong>Notas:</strong> {med.notes || "Sin notas"}
+                    </div>
+                  </div>
+                )}
 
-          <MedicationCard
-            name="Neratinib"
-            dose="240mg"
-            frequency="una vez al día con el desayuno en la mañana"
-            onAskSymptoms={() => setShowSymptoms((v) => !v)}
-          />
-        </div>
+                <MedicationCard
+                  name={med.name}
+                  dose={med.dose}
+                  frequency={med.frequency}
+                  onAskSymptoms={() =>
+                    setShowSymptoms((prev) => ({
+                      ...prev,
+                      [med._id]: !prev[med._id],
+                    }))
+                  }
+                  onDelete={() => handleDelete(med._id)}
+                />
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </>
   );

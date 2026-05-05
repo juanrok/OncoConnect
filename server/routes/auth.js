@@ -7,6 +7,9 @@ const { OAuth2Client } = require("google-auth-library");
 
 const User = require("../models/User");
 const authRequired = require("../models/middleware/auth");
+const { validate } = require("../models/middleware/validators");
+const { authLimiter, verificationLimiter } = require("../models/middleware/rateLimiter");
+const { createPatientForUser } = require("../models/middleware/fhirPatient");
 
 const router = express.Router();
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
@@ -97,21 +100,10 @@ async function issueVerification(user) {
   await sendVerificationEmail(user, plainToken);
 }
 
-router.post("/register", async (req, res) => {
+// Rutas con rate limiting y validación
+router.post("/register", authLimiter, validate("register"), async (req, res) => {
   try {
-    const fullName = String(req.body.fullName || "").trim();
-    const email = normalizeEmail(req.body.email);
-    const password = String(req.body.password || "");
-
-    if (!fullName || !email || !password) {
-      return res.status(400).json({ message: "Completa todos los campos." });
-    }
-
-    if (password.length < 6) {
-      return res
-        .status(400)
-        .json({ message: "La contraseña debe tener al menos 6 caracteres." });
-    }
+    const { fullName, email, password } = req.body;
 
     let user = await User.findOne({ email });
     const passwordHash = await bcrypt.hash(password, 10);
@@ -130,6 +122,16 @@ router.post("/register", async (req, res) => {
         providers: ["local"],
         isEmailVerified: false,
       });
+
+      // Auto-crear Patient FHIR para el usuario
+      try {
+        const patientResourceId = await createPatientForUser(user);
+        user.patientResourceId = patientResourceId;
+        await user.save();
+      } catch (fhirError) {
+        console.error("Error creando Patient FHIR:", fhirError);
+        // No fallar el registro si el Patient no se puede crear
+      }
 
       await issueVerification(user);
 
@@ -172,14 +174,9 @@ router.post("/register", async (req, res) => {
   }
 });
 
-router.post("/verify-email", async (req, res) => {
+router.post("/verify-email", verificationLimiter, validate("verifyEmail"), async (req, res) => {
   try {
-    const token = String(req.body.token || "");
-
-    if (!token) {
-      return res.status(400).json({ message: "Token de verificación faltante." });
-    }
-
+    const { token } = req.body;
     const tokenHash = hashVerificationToken(token);
 
     const user = await User.findOne({
@@ -197,6 +194,16 @@ router.post("/verify-email", async (req, res) => {
     user.emailVerificationTokenHash = null;
     user.emailVerificationExpires = null;
 
+    // Auto-crear Patient si no existe
+    if (!user.patientResourceId) {
+      try {
+        const patientResourceId = await createPatientForUser(user);
+        user.patientResourceId = patientResourceId;
+      } catch (fhirError) {
+        console.error("Error creando Patient FHIR:", fhirError);
+      }
+    }
+
     await user.save();
 
     res.json({ message: "Correo verificado correctamente. Ya puedes iniciar sesión." });
@@ -206,13 +213,9 @@ router.post("/verify-email", async (req, res) => {
   }
 });
 
-router.post("/resend-verification", async (req, res) => {
+router.post("/resend-verification", verificationLimiter, validate("resendVerification"), async (req, res) => {
   try {
-    const email = normalizeEmail(req.body.email);
-
-    if (!email) {
-      return res.status(400).json({ message: "Correo requerido." });
-    }
+    const { email } = req.body;
 
     const user = await User.findOne({ email });
 
@@ -239,16 +242,9 @@ router.post("/resend-verification", async (req, res) => {
   }
 });
 
-router.post("/login", async (req, res) => {
+router.post("/login", authLimiter, validate("login"), async (req, res) => {
   try {
-    const email = normalizeEmail(req.body.email);
-    const password = String(req.body.password || "");
-
-    if (!email || !password) {
-      return res
-        .status(400)
-        .json({ message: "Completa correo y contraseña." });
-    }
+    const { email, password } = req.body;
 
     const user = await User.findOne({ email });
 
@@ -288,13 +284,9 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.post("/google", async (req, res) => {
+router.post("/google", authLimiter, validate("googleAuth"), async (req, res) => {
   try {
-    const credential = String(req.body.credential || "");
-
-    if (!credential) {
-      return res.status(400).json({ message: "Falta la credencial de Google." });
-    }
+    const { credential } = req.body;
 
     const ticket = await googleClient.verifyIdToken({
       idToken: credential,
@@ -323,6 +315,16 @@ router.post("/google", async (req, res) => {
         providers: ["google"],
         isEmailVerified: true,
       });
+
+      // Auto-crear Patient FHIR para el usuario
+      try {
+        const patientResourceId = await createPatientForUser(user);
+        user.patientResourceId = patientResourceId;
+        await user.save();
+      } catch (fhirError) {
+        console.error("Error creando Patient FHIR:", fhirError);
+        // No fallar el login si el Patient no se puede crear
+      }
     } else {
       user.fullName = user.fullName || fullName;
       user.picture = picture || user.picture;
@@ -333,6 +335,16 @@ router.post("/google", async (req, res) => {
 
       if (!user.providers.includes("google")) {
         user.providers.push("google");
+      }
+
+      // Auto-crear Patient si no existe
+      if (!user.patientResourceId) {
+        try {
+          const patientResourceId = await createPatientForUser(user);
+          user.patientResourceId = patientResourceId;
+        } catch (fhirError) {
+          console.error("Error creando Patient FHIR:", fhirError);
+        }
       }
 
       await user.save();
