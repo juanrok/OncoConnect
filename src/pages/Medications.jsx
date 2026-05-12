@@ -10,7 +10,7 @@ export default function Medications() {
   const [medications, setMedications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [showSymptoms, setShowSymptoms] = useState({});
+  const [showInfo, setShowInfo] = useState({});
 
   useEffect(() => {
     loadMedications();
@@ -40,6 +40,13 @@ export default function Medications() {
       console.error("Error deleting medication:", err);
       setError(err.message || "No se pudo eliminar el medicamento.");
     }
+  }
+
+  function handleToggleInfo(id) {
+    setShowInfo((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
   }
 
   return (
@@ -101,37 +108,18 @@ export default function Medications() {
             No tienes medicamentos registrados aún.
           </div>
         ) : (
-          <div className="symptomsWrap" style={{ marginTop: 10 }}>
+          <div style={{ marginTop: 10 }}>
             {medications.map((med) => (
-              <div key={med._id}>
-                {showSymptoms[med._id] && (
-                  <div className="popover">
-                    <div className="popTitle">
-                      Información de {med.name}
-                    </div>
-                    <div className="popText">
-                      <strong>Dosis:</strong> {med.dose || "No especificada"}
-                      <br />
-                      <strong>Frecuencia:</strong> {med.frequency || "No especificada"}
-                      <br />
-                      <strong>Notas:</strong> {med.notes || "Sin notas"}
-                    </div>
-                  </div>
-                )}
-
-                <MedicationCard
-                  name={med.name}
-                  dose={med.dose}
-                  frequency={med.frequency}
-                  onAskSymptoms={() =>
-                    setShowSymptoms((prev) => ({
-                      ...prev,
-                      [med._id]: !prev[med._id],
-                    }))
-                  }
-                  onDelete={() => handleDelete(med._id)}
-                />
-              </div>
+              <MedicationCard
+                key={med._id}
+                name={med.name}
+                dose={med.dose}
+                frequency={med.frequency}
+                notes={med.notes}
+                showInfo={!!showInfo[med._id]}
+                onToggleInfo={() => handleToggleInfo(med._id)}
+                onDelete={() => handleDelete(med._id)}
+              />
             ))}
           </div>
         )}

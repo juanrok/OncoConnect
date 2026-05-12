@@ -1,4 +1,37 @@
-export default function MedicationCard({ name, dose, frequency, onAskSymptoms, onDelete }) {
+export default function MedicationCard({
+  name,
+  dose,
+  frequency,
+  notes,
+  showInfo,
+  onToggleInfo,
+  onDelete,
+}) {
+  if (showInfo) {
+    return (
+      <div className="medCard">
+        <div className="medName">{name}</div>
+
+        <div className="medLine" style={{ marginTop: 10 }}>
+          <b>Notas:</b> {notes && notes.trim() ? notes : "Sin notas"}
+        </div>
+
+        <button
+          type="button"
+          className="smallLink"
+          onClick={onToggleInfo}
+          style={{
+            border: "none",
+            background: "transparent",
+            padding: 0,
+          }}
+        >
+          Volver
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className="medCard">
       <div className="rowBetween">
@@ -23,9 +56,18 @@ export default function MedicationCard({ name, dose, frequency, onAskSymptoms, o
       <div className="medLine"><b>Dosis:</b> {dose || "No especificada"}</div>
       <div className="medLine"><b>Frecuencia:</b> {frequency || "No especificada"}</div>
 
-      <span className="smallLink" onClick={onAskSymptoms}>
+      <button
+        type="button"
+        className="smallLink"
+        onClick={onToggleInfo}
+        style={{
+          border: "none",
+          background: "transparent",
+          padding: 0,
+        }}
+      >
         ¿Qué información tienes?
-      </span>
+      </button>
     </div>
   );
 }

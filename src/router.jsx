@@ -7,6 +7,7 @@ import Welcome from "./pages/Welcome";
 import Medications from "./pages/Medications";
 import AddMedication from "./pages/AddMedication";
 import ProtectedRoute from "./components/ProtectedRoute";
+import PublicRoute from "./components/PublicRoute";
 import Name from "./pages/Name";
 import School from "./pages/School";
 import SchoolCategories from "./pages/SchoolCategories";
@@ -19,8 +20,22 @@ export const router = createBrowserRouter([
     element: <App />,
     children: [
       { index: true, element: <Home /> },
-      { path: "login", element: <Login /> },
-      { path: "register", element: <Register /> },
+      {
+        path: "login",
+        element: (
+          <PublicRoute>
+            <Login />
+          </PublicRoute>
+        ),
+      },
+      {
+        path: "register",
+        element: (
+          <PublicRoute>
+            <Register />
+          </PublicRoute>
+        ),
+      },
       { path: "check-email", element: <CheckEmail /> },
       { path: "verify-email", element: <VerifyEmail /> },
       {

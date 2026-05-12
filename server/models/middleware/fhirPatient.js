@@ -1,6 +1,6 @@
 const crypto = require("crypto");
-const FhirResource = require("../../models/FhirResource");
-const User = require("../../models/User");
+const FhirResource = require("../FhirResource");
+const User = require("../User");
 
 const ID_PREFIX = {
   Patient: "pt",
