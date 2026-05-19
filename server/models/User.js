@@ -52,6 +52,11 @@ const UserSchema = new mongoose.Schema(
       type: Date,
       default: null,
     },
+    patientResourceId: {
+      type: String,
+      default: null,
+      index: true,
+    },
   },
   { timestamps: true }
 );

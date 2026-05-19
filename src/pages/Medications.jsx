@@ -1,12 +1,53 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import TopBar from "../components/TopBar";
 import MedicationCard from "../components/MedicationCard";
+import { medicationsService } from "../services/medications";
 
 export default function Medications() {
   const navigate = useNavigate();
   const { openMenu } = useOutletContext();
-  const [showSymptoms, setShowSymptoms] = useState(false);
+  const [medications, setMedications] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [showInfo, setShowInfo] = useState({});
+
+  useEffect(() => {
+    loadMedications();
+  }, []);
+
+  async function loadMedications() {
+    try {
+      setLoading(true);
+      setError("");
+      const data = await medicationsService.getAll();
+      setMedications(data);
+    } catch (err) {
+      console.error("Error loading medications:", err);
+      setError(err.message || "No se pudieron cargar los medicamentos.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleDelete(id) {
+    if (!confirm("¿Estás segura de que quieres eliminar este medicamento?")) return;
+
+    try {
+      await medicationsService.delete(id);
+      setMedications((prev) => prev.filter((m) => m._id !== id));
+    } catch (err) {
+      console.error("Error deleting medication:", err);
+      setError(err.message || "No se pudo eliminar el medicamento.");
+    }
+  }
+
+  function handleToggleInfo(id) {
+    setShowInfo((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
+  }
 
   return (
     <>
@@ -44,28 +85,44 @@ export default function Medications() {
           Añadir medicamento
         </button>
 
+        {error && (
+          <div
+            style={{
+              backgroundColor: "#ffe0e0",
+              color: "#c00",
+              padding: "10px",
+              borderRadius: "4px",
+              marginTop: "10px",
+            }}
+          >
+            {error}
+          </div>
+        )}
+
         <div className="sectionTitle">Tus medicamentos</div>
 
-        <div className="symptomsWrap" style={{ marginTop: 10 }}>
-          {showSymptoms && (
-            <div className="popover">
-              <div className="popTitle">
-                Posibles síntomas al consumir Neratinib
-              </div>
-              <div className="popText">
-                infecciones, náuseas, fatiga, diarrea, vómitos, dolor de cabeza,
-                estreñimiento, alopecia, tos, erupción, dolor de espalda
-              </div>
-            </div>
-          )}
-
-          <MedicationCard
-            name="Neratinib"
-            dose="240mg"
-            frequency="una vez al día con el desayuno en la mañana"
-            onAskSymptoms={() => setShowSymptoms((v) => !v)}
-          />
-        </div>
+        {loading ? (
+          <div style={{ textAlign: "center", padding: "20px" }}>Cargando...</div>
+        ) : medications.length === 0 ? (
+          <div style={{ textAlign: "center", padding: "20px", opacity: 0.7 }}>
+            No tienes medicamentos registrados aún.
+          </div>
+        ) : (
+          <div style={{ marginTop: 10 }}>
+            {medications.map((med) => (
+              <MedicationCard
+                key={med._id}
+                name={med.name}
+                dose={med.dose}
+                frequency={med.frequency}
+                notes={med.notes}
+                showInfo={!!showInfo[med._id]}
+                onToggleInfo={() => handleToggleInfo(med._id)}
+                onDelete={() => handleDelete(med._id)}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </>
   );

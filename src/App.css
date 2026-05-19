@@ -29,7 +29,13 @@
 .canvas{
   width: min(420px, 100%);
   margin-left: auto;
-  margin-right: auto;  
+  margin-right: auto;
+}
+
+.homePage .canvas,
+.homePage {
+  width: 100%;
+  max-width: 100%;
 }
 
 .topbar{
@@ -42,6 +48,16 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+.homePage .topbar {
+  background: var(--topbar);
+  height: 56px;
+  border-radius: 28px;     
+  margin: 14px auto 0;     
+  padding: 0 16px;
+  max-width: 620px;
+  width: calc(100% - 28px);
 }
 
 .logoCircle{
@@ -125,9 +141,12 @@ p{
   margin-top: 12px;
   border: 1.5px solid var(--cardBorder);
   border-radius: 14px;
-  padding: 14px;
+  padding: 15px;
   background: rgba(255,255,255,0.25);
   width: 100%;
+  min-height: 135px;
+  display: flex;
+  flex-direction: column;
 }
 
 .medName{
@@ -142,41 +161,12 @@ p{
 }
 
 .smallLink{
-  margin-top: 10px;
+  margin-top: auto;
   font-size: 11px;
   color: var(--hot);
   text-decoration: none;
   display: inline-block;
   cursor: pointer;
-}
-
-.symptomsWrap{
-  position: relative;
-  width: 100%;
-}
-
-.popover{
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  top: -128px;
-  width: min(320px, 92%);
-  background: #f57fa0;
-  color: #2b0f10;
-  border-radius: 16px;
-  padding: 12px 14px;
-  box-shadow: var(--shadow);
-}
-
-.popTitle{
-  font-weight: 900;
-  font-size: 12px;
-  margin-bottom: 6px;
-}
-
-.popText{
-  font-size: 11px;
-  color: rgba(43,15,16,0.9);
 }
 
 .formTitle{
@@ -322,6 +312,290 @@ p{
   overflow: hidden;   
   display: grid;
   place-items: center;
+}
+
+/* HOME PAGE - LANDING */
+.homePage {
+  width: 100%;
+  background: var(--bg);
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+}
+
+.loginBtn {
+  background: var(--hot);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 12px;
+  cursor: pointer;
+  transition: filter 0.2s;
+}
+
+.loginBtn:hover {
+  filter: brightness(1.05);
+}
+
+/* HERO SECTION */
+.heroSection {
+  padding: 32px 20px 48px;
+  text-align: center;
+  background: linear-gradient(135deg, var(--bg) 0%, rgba(245, 127, 160, 0.15) 100%);
+}
+
+.heroContent {
+  max-width: 540px;
+  margin: 0 auto;
+}
+
+.heroLogo {
+  width: 120px;
+  height: 120px;
+  margin-bottom: 20px;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+.heroTitle {
+  font-size: clamp(24px, 5vw, 36px);
+  font-weight: 900;
+  color: var(--text);
+  margin: 0 0 12px 0;
+  line-height: 1.2;
+}
+
+.heroSubtitle {
+  font-size: clamp(14px, 3vw, 18px);
+  color: var(--muted);
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+
+.heroCTA {
+  background: var(--hot);
+  color: white;
+  border: none;
+  padding: 14px 28px;
+  border-radius: 999px;
+  font-weight: 800;
+  font-size: 14px;
+  cursor: pointer;
+  box-shadow: 0 10px 24px rgba(225, 0, 106, 0.3);
+  transition: filter 0.2s;
+}
+
+.heroCTA:hover {
+  filter: brightness(1.05);
+}
+
+/* INFO SECTIONS */
+.sectionContainer {
+  max-width: 620px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.infoSection {
+  padding: 40px 20px;
+  background: white;
+  border-radius: 24px 24px 0 0;
+  margin-top: 20px;
+}
+
+.sectionHeading {
+  font-size: clamp(20px, 4vw, 28px);
+  font-weight: 900;
+  color: var(--text);
+  margin: 0 0 16px 0;
+  text-align: center;
+}
+
+.sectionSubtext {
+  font-size: 14px;
+  color: var(--muted);
+  text-align: center;
+  margin-bottom: 24px;
+  line-height: 1.6;
+}
+
+.sectionText {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.7;
+  margin-bottom: 14px;
+  text-align: justify;
+}
+
+.sectionText:last-of-type {
+  margin-bottom: 0;
+}
+
+/* PRINCIPLES SECTION */
+.principlesSection {
+  padding: 40px 20px;
+  background: white;
+}
+
+.principlesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.principleCard {
+  background: var(--bg);
+  padding: 18px;
+  border-radius: 16px;
+  text-align: center;
+  border: 1.5px solid rgba(225, 0, 106, 0.15);
+}
+
+.principleCard h3 {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--hot);
+  margin: 0 0 8px 0;
+}
+
+.principleCard p {
+  font-size: 12px;
+  color: var(--muted);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* FEATURES SECTION */
+.featuresSection {
+  padding: 40px 20px;
+  background: white;
+}
+
+.featuresGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.featureCard {
+  background: linear-gradient(135deg, var(--bg) 0%, rgba(245, 127, 160, 0.2) 100%);
+  padding: 20px;
+  border-radius: 16px;
+  border: 1px solid rgba(225, 0, 106, 0.2);
+  text-align: center;
+}
+
+.featureCard h3 {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--text);
+  margin: 0 0 10px 0;
+}
+
+.featureCard p {
+  font-size: 12px;
+  color: var(--muted);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* CTA SECTION */
+.ctaSection {
+  padding: 48px 20px;
+  background: white;
+  text-align: center;
+  border-radius: 0 0 24px 24px;
+  margin-bottom: 20px;
+}
+
+.ctaTitle {
+  font-size: clamp(18px, 4vw, 24px);
+  font-weight: 900;
+  color: var(--text);
+  margin: 0 0 12px 0;
+}
+
+.ctaText {
+  font-size: 14px;
+  color: var(--muted);
+  margin-bottom: 24px;
+  line-height: 1.6;
+}
+
+.ctaButton {
+  background: var(--hot);
+  color: white;
+  border: none;
+  padding: 14px 32px;
+  border-radius: 999px;
+  font-weight: 800;
+  font-size: 14px;
+  cursor: pointer;
+  box-shadow: 0 10px 24px rgba(225, 0, 106, 0.3);
+  transition: filter 0.2s;
+}
+
+.ctaButton:hover {
+  filter: brightness(1.05);
+}
+
+.footerText {
+  font-size: 11px;
+  color: rgba(43, 15, 16, 0.5);
+  margin-top: 20px;
+  line-height: 1.5;
+}
+
+/* RESPONSIVE */
+@media (max-width: 640px) {
+  .heroSection {
+    padding: 24px 16px 40px;
+  }
+
+  .heroLogo {
+    width: 100px;
+    height: 100px;
+  }
+
+  .heroTitle {
+    font-size: 22px;
+  }
+
+  .heroSubtitle {
+    font-size: 14px;
+  }
+
+  .infoSection,
+  .principlesSection,
+  .featuresSection,
+  .ctaSection {
+    padding: 32px 16px;
+    margin-left: -20px;
+    margin-right: -20px;
+    border-radius: 0;
+  }
+
+  .principlesGrid,
+  .featuresGrid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .sectionText {
+    text-align: left;
+  }
 }
 
 .welcomeImg{
