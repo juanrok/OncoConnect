@@ -15,7 +15,7 @@ export default function MenuDrawer({ open, onClose, onNavigate }) {
           <button className="drawerItem" onClick={() => onNavigate("/Name")}>
             Bienvenida
           </button>
-          <button className="drawerItem" onClick={() => onNavigate("/login")}>
+          <button className="drawerItem" onClick={() => onNavigate("/lineaTiempo")}>
             Hoja de ruta
           </button>
           <button className="drawerItem" onClick={() => onNavigate("/medications")}>

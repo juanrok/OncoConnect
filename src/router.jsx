@@ -12,6 +12,10 @@ import School from "./pages/School";
 import SchoolCategories from "./pages/SchoolCategories";
 import CheckEmail from "./pages/CheckEmail";
 import VerifyEmail from "./pages/VerifyEmail";
+import LineaTiempo from "./pages/LineaTiempo";
+import SegDiario from "./pages/SegDiario";
+import SegMedico from "./pages/SegMedico";
+import PanelRecomendaciones from "./pages/PanelRecomendaciones";
 
 export const router = createBrowserRouter([
   {
@@ -50,6 +54,10 @@ export const router = createBrowserRouter([
       },
       { path: "school", element: <School /> },
       { path: "school/categories", element: <SchoolCategories /> },
+      { path: "lineaTiempo", element: <LineaTiempo /> },
+      { path: "lineaTiempo/segDiario", element: <SegDiario /> },
+      { path: "lineaTiempo/segMedico", element: <SegMedico /> },
+      { path: "lineaTiempo/panelRecomendaciones", element: <PanelRecomendaciones /> },
     ],
   },
 ]);

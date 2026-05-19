@@ -468,3 +468,219 @@ p{
     margin-right: auto;
   }
 }
+
+
+/*HOJA DE RUTAA
+/* ===== Hoja de ruta ===== */
+.roadmapHeader{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.addEventBtn{
+  border: none;
+  background: var(--hot);
+  color: white;
+  border-radius: 999px;
+  padding: 8px 12px;
+  font-weight: 800;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 10px 18px rgba(225, 0, 106, 0.18);
+}
+
+.addPlus{
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: rgba(255,255,255,0.25);
+}
+
+.timeline{
+  margin-top: 12px;
+}
+
+.tRow{
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  gap: 10px;
+  margin: 10px 0;
+}
+
+.tLeft{
+  position: relative;
+  display: grid;
+  justify-items: center;
+}
+
+.tDot{
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(225,0,106,0.35);
+  margin-top: 6px;
+}
+
+.tDot.strong{
+  background: var(--hot);
+}
+
+.tLine{
+  width: 2px;
+  height: 100%;
+  background: rgba(43,15,16,0.25);
+  margin-top: 6px;
+}
+
+.tRight{
+  padding-bottom: 10px;
+}
+
+.tTitle{
+  font-weight: 900;
+  margin-top: 4px;
+}
+
+.tSub, .tMini, .tDate{
+  font-size: 12px;
+  color: rgba(43,15,16,0.75);
+}
+
+.pillLink{
+  margin-top: 8px;
+  border: none;
+  background: rgba(225,0,106,0.10);
+  color: var(--hot);
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+/* Bottom sheet */
+.sheetOverlay{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.25);
+  display: grid;
+  align-items: end;
+  justify-items: center;
+  z-index: 9999;
+}
+
+.sheet{
+  width: min(420px, 100%);
+  background: var(--hot);
+  color: white;
+  border-radius: 28px 28px 0 0;
+  padding: 16px;
+}
+
+.sheetTitle{
+  font-weight: 900;
+  margin-bottom: 10px;
+}
+
+.sheetOption{
+  display: grid;
+  grid-template-columns: 20px 1fr;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 16px;
+  background: rgba(255,255,255,0.10);
+  margin-bottom: 10px;
+}
+
+.sheetOptName{ font-weight: 900; }
+.sheetOptDesc{ font-size: 12px; opacity: 0.9; }
+
+/* Daily / Medical form helpers */
+.checkGrid{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 12px;
+  margin-top: 6px;
+}
+
+.checkItem{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: rgba(43,15,16,0.85);
+}
+
+.textArea{
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(43,15,16,0.25);
+  background: rgba(255,255,255,0.55);
+  outline: none;
+}
+
+.mapMock{
+  margin-top: 10px;
+  width: 100%;
+  height: 140px;
+  border-radius: 16px;
+  background: rgba(0,0,0,0.06);
+  display: grid;
+  place-items: center;
+  color: rgba(43,15,16,0.65);
+  font-weight: 800;
+}
+
+/* OK modal */
+.modalOverlay{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.25);
+  display: grid;
+  place-items: center;
+  z-index: 9999;
+}
+
+.okModal{
+  width: min(320px, 92%);
+  background: #f57fa0;
+  border-radius: 16px;
+  padding: 14px;
+  display: grid;
+  gap: 10px;
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+
+.okTitle{
+  font-weight: 900;
+  font-size: 18px;
+}
+
+/* Recomendaciones */
+.recoPanel{
+  margin-top: 12px;
+  background: var(--hot);
+  color: white;
+  border-radius: 24px;
+  padding: 14px;
+}
+
+.recoTitle{
+  font-weight: 900;
+  margin-bottom: 8px;
+}
+
+.recoList{
+  margin: 0 0 6px 18px;
+  padding: 0;
+  font-size: 12px;
+  opacity: 0.95;
+}
